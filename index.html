@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <title> Cars </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="all">
+</head>
+<body onload="openModalWindow()">
+
+    <div id="chooseRoadType" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Выберите количество дорог</h2><!--<h2><a href="#" title="Закрыть" class="close">×</a></h2>-->
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="roadsNum">1</label>
+                        <input type="range" id="roadsNum" name="roadsNum" min="1" max="10" value ="5" oninput="changeRoadNumHandler(this.value, chooseRoadsNum)">
+                        <label for="roadsNum">10</label>
+                    </div>
+                    <input type="button" id="chooseRoadsNum" value="выбрать 5 дорог" onclick="chooseRoadNumHandler(roadsNum.value)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <canvas height="750" width="750" id="mainField"></canvas>
+    <button id="add_car" onclick="addCar()">add car</button>
+    <div id="debug"></div>
+    <script src="constants.js"></script>
+    <script src="functions.js"></script>
+    <script src="classes.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
