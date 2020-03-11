@@ -1,6 +1,7 @@
 let mainField = document.getElementById(CANVAS_ID),
     canvasContext = mainField.getContext('2d'),
-    startPositions = [];
+    startPositions = [],
+    stopFlag = false;
 
     /*
         new Point(0, DIST_BETWEEN_LINES),

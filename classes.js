@@ -58,7 +58,7 @@ class Car {
         /*if (this.prevPos) {
             // this.prevPos.draw(this.color, this.slowDown ? 10 : 5);
         }*/
-        this.point.draw(this.color, this.slowDown ? 5 : 5);
+        this.point.draw(this.color, this.slowDown ? 10 : 5);
     }
 
     move() {
@@ -77,7 +77,7 @@ class Car {
 
         this.slowDown = false;
 
-        /*cars = cars.filter((other) => {
+        cars = cars.filter((other) => {
             let dist = this.point.distanceToPoint(other.point);
 
             return  dist <= MIN_DIST && 
@@ -87,11 +87,11 @@ class Car {
 
         if (cars.length > 1) {
             this.slowDown = true;
-            this.speed = Math.max(0, this.speed - 1);
+            this.speed = Math.max(0, this.speed - 0.1);
             return;
         } else {
-            this.speed = Math.min(this.maxSpeed, this.speed + 1);
-        } */
+            this.speed = Math.min(this.maxSpeed, this.speed + 0.1);
+        }
 
         nearestPoints = road.getNearestPoints(this.point, this.speed);
         length = nearestPoints.length;
@@ -136,7 +136,7 @@ class Road {
             uniqueCandidates = [], 
             idsArr = [];
 
-        //highlightPoints(filteredCandidates);
+        highlightPoints(filteredCandidates);
 
         for (let i in filteredCandidates) {
             let roadPoint = filteredCandidates[i],
@@ -153,6 +153,8 @@ class Road {
         nearestCandidates.sort((a, b) => {
             return b.dist - a.dist;
         });
+
+        console.log(nearestCandidates);
 
         for (let i in nearestCandidates) {
             let candidatePoint = nearestCandidates[i];

@@ -54,7 +54,8 @@ function generateCircleRoad() {
     for (let alpha = 0; alpha < 360; alpha += CIRCLE_ROAD_FREQ) {
         resArr.push(new Point(
             { radius: ROAD_RADIUS, alpha: alpha },
-            { radius: 0, alpha: ALPHA_DIRECTION },
+            { radius: 1, alpha: ALPHA_DIRECTION },
+            //{ radius: 0, alpha: ALPHA_DIRECTION },
             CIRCLE_ROAD_ID
         ));
     }
@@ -79,6 +80,10 @@ function addCar() {
 function draw(timestamp) {
     let cars = document.cars,
         road = document.road;
+
+    if (stopFlag) {
+        return;
+    }
 
     canvasContext.clearRect(0, 0, mainField.width, mainField.height);
     road.draw();
@@ -128,7 +133,7 @@ function changeRoadNumHandler(roadsNum, btnId) {
 }
 
 function checkDirection (currentPoint, point) {
-    let alpha = (Math.abs(point.alpha - currentPoint.alpha) > 1.0 * Math.PI ? 
+    let alpha = (point.alpha - currentPoint.alpha > 1.8 * Math.PI ? 
             point.alpha + ALPHA_DIRECTION * 2 * Math.PI :
             point.alpha),
         diffR = currentPoint.radius - point.radius,
@@ -138,6 +143,8 @@ function checkDirection (currentPoint, point) {
         candDirR = point.direction.radius,
         candDirA = point.direction.alpha;
 
+    if (currentPoint.alpha - point.alpha > 1.8 * Math.PI) return false;
+    
     return  diffR * curDirR >= 0 && diffA * curDirA >= 0 &&
             diffR * candDirR >= 0 && diffA * candDirA >= 0;
 }
@@ -151,5 +158,12 @@ function main (roadsNum) {
         new Point(mainField.width - DIST_BETWEEN_LINES, mainField.height),
         new Point(0, mainField.height - DIST_BETWEEN_LINES)
     ];
+    document.addEventListener('keypress', (event) => {
+        const keyName = event.key;
+
+        if (keyName === 'C') {
+            stopFlag = true;
+        }
+      });
     window.requestAnimationFrame(draw);
 }
