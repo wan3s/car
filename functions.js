@@ -54,8 +54,7 @@ function generateCircleRoad() {
     for (let alpha = 0; alpha < 360; alpha += CIRCLE_ROAD_FREQ) {
         resArr.push(new Point(
             { radius: ROAD_RADIUS, alpha: alpha },
-            { radius: 1, alpha: ALPHA_DIRECTION },
-            //{ radius: 0, alpha: ALPHA_DIRECTION },
+            { radius: 0, alpha: ALPHA_DIRECTION },
             CIRCLE_ROAD_ID
         ));
     }
@@ -144,7 +143,7 @@ function checkDirection (currentPoint, point) {
         candDirA = point.direction.alpha;
 
     if (currentPoint.alpha - point.alpha > 1.8 * Math.PI) return false;
-    
+
     return  diffR * curDirR >= 0 && diffA * curDirA >= 0 &&
             diffR * candDirR >= 0 && diffA * candDirA >= 0;
 }

@@ -87,10 +87,10 @@ class Car {
 
         if (cars.length > 1) {
             this.slowDown = true;
-            this.speed = Math.max(0, this.speed - 0.1);
+            this.speed = Math.max(0, this.speed - SPEED_DELTA);
             return;
         } else {
-            this.speed = Math.min(this.maxSpeed, this.speed + 0.1);
+            this.speed = Math.min(this.maxSpeed, this.speed + SPEED_DELTA);
         }
 
         nearestPoints = road.getNearestPoints(this.point, this.speed);
@@ -136,7 +136,7 @@ class Road {
             uniqueCandidates = [], 
             idsArr = [];
 
-        highlightPoints(filteredCandidates);
+        // highlightPoints(filteredCandidates);
 
         for (let i in filteredCandidates) {
             let roadPoint = filteredCandidates[i],
