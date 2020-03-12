@@ -67,7 +67,12 @@ function randomInt(min, max) {
 }
 
 function addCar() {
-    let cars = document.app.cars;
+    let app = document.app,
+        cars = app.cars;
+
+    if (app.flags.stop) {
+        return;
+    }
 
     if (cars.length < MAX_CARS_NUM) {
         cars.push(new Car());
@@ -167,14 +172,24 @@ function main (roadsNum) {
 function switchLeaveMode (obj) {
     let app = document.app;
 
+    if (app.flags.stop) {
+        return;
+    }
     app.flags.leaveCircle = !app.flags.leaveCircle;
     obj.innerText = LEAVE_MODE_SWITCHER_LABEL[app.flags.leaveCircle];
     obj.title = LEAVE_MODE_SWITCHER_TITLES[app.flags.leaveCircle];
     app.road.generateRoad(app);
 }
 
+function closeApp () {
+    let app = document.app;
+
+    app.flags.stop = true;
+    location.href = `#${CLOSE_WINDOW_ID}`;
+}
+
 function showMessage (msg) {
-    document.getElementById("messages").innerText = msg;
-    location.href = '#messages';
-    setTimeout(() => {closeModalWindow()}, 3000);
+    document.getElementById(MESSAGE_BANNER_ID).innerText = msg;
+    location.href = `#${MESSAGE_BANNER_ID}`;
+    setTimeout(() => { closeModalWindow() }, MESSAGE_BANNER_DELAY);
 }

@@ -25,4 +25,7 @@ const CANVAS_ID = 'mainField',
     LEAVE_MODE_SWITCHER_TITLES = {
         false: "уезжать с круга",
         true: "оставаться на кругу"
-    };
+    },
+    MESSAGE_BANNER_ID = "messagesBanner",
+    MESSAGE_BANNER_DELAY = 3000,
+    CLOSE_WINDOW_ID = "closeWindow";

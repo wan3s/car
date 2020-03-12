@@ -136,7 +136,7 @@ canvas {
 }
   
 
-.box_for_messages {
+.messages_banner {
     height: 100px;
     position: fixed;
     top: 15px;
@@ -160,13 +160,13 @@ canvas {
     transition: opacity 200ms ease-in;
 }
 
-.box_for_messages:target {
+.messages_banner:target {
     opacity: 1;
 }
 
 .buttons {
     position: fixed;
-    width: 200px;
+    width: 80px;
     z-index: 999;
     left: 0px;
     top: 0px;
@@ -188,4 +188,19 @@ canvas {
     font-family: Arial, Helvetica, sans-serif;
     border: none;
     font-size: 14pt;
+}
+
+.close_window {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
+    opacity: 0;
+}
+
+.close_window:target {
+    opacity: 1;
+    z-index: 1000;
 }
