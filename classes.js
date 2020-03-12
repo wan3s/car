@@ -1,13 +1,16 @@
 class Application {
     constructor(roadsNum) {
-        this.mainField = document.getElementById(CANVAS_ID),
-        this.canvasContext = mainField.getContext('2d'),
-        this.startPositions = [],
-        this.cars = [];
-        this.road = new Road(this, roadsNum);
+        this.mainField = document.getElementById(CANVAS_ID);
+        this.canvasContext = mainField.getContext('2d');
+
         this.flags = {
             stop: false,
+            leaveCircle: false,
         };
+
+        this.startPositions = [];
+        this.cars = [];
+        this.road = new Road(this, roadsNum);
         this.addEventListeners();
     }
 
@@ -62,15 +65,16 @@ class Car {
         let speed = randomInt(MIN_NEAREST_POINTS_EPS, MAX_NEAREST_POINTS_EPS),
             app = document.app;
 
-        console.log(app);
         this.point = app.startPositions[randomInt(0, app.startPositions.length - 1)];
         this.prevPoint = null;
         this.color = `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
         this.start = null;
-        this.finished = false;
         this.speed = speed;
         this.maxSpeed = speed;
-        this.slowDown = false;
+        this.states = {
+            slowDown: false,
+            finished: false,
+        };
     }
 
     draw(timestamp) {
@@ -83,28 +87,40 @@ class Car {
             this.start = timestamp;
         }
     
-        /*if (this.prevPos) {
-            // this.prevPos.draw(this.color, this.slowDown ? 10 : 5);
-        }*/
-        this.point.draw(this.color, this.slowDown ? 10 : 5);
+        //this.point.draw(this.color, this.states.slowDown ? 10 : 5);
+        this.point.draw(this.color, this.states.slowDown ? 7 : 5);
     }
 
     move() {
         let app = document.app,
             road = app.road,
-            cars = app.cars,
             nearestPoints,
             length,
             nextPoint;
     
-        if (this.point.x < -FINISH_BORDERS_OFFSET || this.point.x > mainField.width + FINISH_BORDERS_OFFSET ||
-            this.point.y < -FINISH_BORDERS_OFFSET || this.point.y > mainField.height + FINISH_BORDERS_OFFSET) {
-            
-            this.finished = true;
+        if (isFinishPoint(this.point)) {
+            this.states.finished = true;
             return;
         }
 
-        this.slowDown = false;
+        this.states.slowDown = false;
+
+        this.recalculateSpeed();
+
+        nearestPoints = road.getNearestPoints(this.point, this.speed);
+        length = nearestPoints.length;
+        nextPoint = nearestPoints[randomInt(0, length - 1)];
+    
+        if (!nextPoint) {
+            return;
+        }
+
+        this.prevPoint = this.point;
+        this.point = nextPoint;
+    }
+
+    recalculateSpeed() {
+        let cars = document.app.cars;
 
         cars = cars.filter((other) => {
             let dist = this.point.distanceToPoint(other.point);
@@ -115,36 +131,18 @@ class Car {
         });
 
         if (cars.length > 1) {
-            this.slowDown = true;
-            this.speed = Math.max(0, this.speed - SPEED_DELTA);
-            return;
-        } else {
-            this.speed = Math.min(this.maxSpeed, this.speed + SPEED_DELTA);
-        }
-
-        nearestPoints = road.getNearestPoints(this.point, this.speed);
-        length = nearestPoints.length;
-        nextPoint = nearestPoints[randomInt(0, length - 1)];
-    
-        if (!nextPoint) {
+            this.states.slowDown = true;
+            this.speed = Math.max(0, this.speed - SPEED_DEC);
             return;
         }
-
-        /* cars = cars.filter((other) => {
-            let dist1 = this.point.distanceToPoint(other.point),
-                dist2 = nextPoint.distanceToPoint(other.point);
-
-            return dist2 <= MIN_DIST && dist2 <= dist1;
-        }); */
-
-        this.prevPoint = this.point;
-        this.point = nextPoint;
+        this.speed = Math.min(this.maxSpeed, this.speed + SPEED_INC);
     }
 }
 
 class Road {
     constructor(app, roadsNum) {
-        this.points = generateLineRoad(app, roadsNum).concat(generateCircleRoad());
+        this.roadsNum = roadsNum;
+        this.generateRoad(app, roadsNum)
     }
 
     draw() {
@@ -155,6 +153,12 @@ class Road {
 
             point.draw('grey', LINE_WIDTH);
         }
+    }
+
+    generateRoad(app) {
+        console.log("Inside generate road");
+        console.log(app);
+        this.points = generateLineRoad(app, this.roadsNum).concat(generateCircleRoad(app));
     }
 
     getNearestPoints(currentPoint, speed) {

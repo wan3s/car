@@ -8,7 +8,7 @@ const CANVAS_ID = 'mainField',
     DIR_EPS = 0.5,
     DIST_BETWEEN_LINES = 20,
     LINE_WIDTH = 10,
-    MAX_CARS_NUM = 20,
+    MAX_CARS_NUM = 10,
     POINTS_COMP_EPS = 1,
     MIN_NEAREST_POINTS_EPS = 5,
     MAX_NEAREST_POINTS_EPS = 10,
@@ -16,4 +16,9 @@ const CANVAS_ID = 'mainField',
     FINISH_BORDERS_OFFSET = 5,
     MIN_DIST = 70,
     ALPHA_DIRECTION = -1,
-    SPEED_DELTA = 0.0001;
+    SPEED_INC = 0.5,
+    SPEED_DEC = 1,
+    LEAVE_MODE_SWITCHER_LABEL = {
+        false: "уезжать с круга",
+        true: "оставаться на кругу"
+    };

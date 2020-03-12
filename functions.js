@@ -28,7 +28,6 @@ function generateLineRoad(app, roadsNum) {
             if (Math.abs(towCenterX) <= EPS || Math.abs(mainField.width - towCenterX) <= EPS ||
                 Math.abs(towCenterY) <= EPS || Math.abs(mainField.height - towCenterY) <= EPS) { 
                     app.startPositions.push(point1);
-                    console.log("start position point added")
             }
 
             resArr = resArr.concat([
@@ -49,13 +48,13 @@ function highlightPoints(pointsArr) {
     }
 }
 
-function generateCircleRoad() {
+function generateCircleRoad(app) {
     let resArr = [];
 
     for (let alpha = 0; alpha < 360; alpha += CIRCLE_ROAD_FREQ) {
         resArr.push(new Point(
             { radius: ROAD_RADIUS, alpha: alpha },
-            { radius: 0, alpha: ALPHA_DIRECTION },
+            { radius: app.flags.leaveCircle ? 0 : 1, alpha: ALPHA_DIRECTION },
             CIRCLE_ROAD_ID
         ));
     }
@@ -150,9 +149,26 @@ function draw(timestamp) {
     window.requestAnimationFrame(draw);
 }
 
+function isFinishPoint (point) {
+    let app = document.app;
+
+    return  point.x < -FINISH_BORDERS_OFFSET || 
+            point.x > app.mainField.width + FINISH_BORDERS_OFFSET ||
+            point.y < -FINISH_BORDERS_OFFSET || 
+            point.y > app.mainField.height + FINISH_BORDERS_OFFSET;
+}
+
 function main (roadsNum) {
-    console.log("Inside main");
     closeModalWindow();
     document.app = new Application(roadsNum);
     window.requestAnimationFrame(draw);
+}
+
+function switchLeaveMode (obj) {
+    let app = document.app;
+
+    app.flags.leaveCircle = !app.flags.leaveCircle;
+    console.log(LEAVE_MODE_SWITCHER_LABEL)
+    obj.innerText = LEAVE_MODE_SWITCHER_LABEL[app.flags.leaveCircle];
+    app.road.generateRoad(app);
 }
