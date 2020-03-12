@@ -188,7 +188,31 @@ canvas {
     font-family: Arial, Helvetica, sans-serif;
     border: none;
     font-size: 14pt;
+    -webkit-transition: all 200ms ease-in; 
+    -moz-transition: all 200ms ease-in;
+    transition: all 200ms ease-in;
 }
+
+.control_button:hover {
+    width: 100px;
+    height: 100px;
+    font-size: 28pt;
+    -webkit-transition: all 200ms ease-in; 
+    -moz-transition: all 200ms ease-in;
+    transition: all 200ms ease-in;
+}
+
+.control_button:active {
+    background-color: #414a4c; /* #164229 */;
+    outline: none;
+    -webkit-transition: all 50ms ease-in; 
+    -moz-transition: all 50ms ease-in;
+    transition: all 50ms ease-in;
+}
+
+.control_button:focus {
+    outline: none;
+  }
 
 .close_window {
     position: fixed;

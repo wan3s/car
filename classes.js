@@ -19,6 +19,7 @@ class Application {
             const keyName = event.key;
 
             if (keyName === 'C') {
+                showMessage("[Shift + c] Interrupt");
                 this.flags.stop = true;
             }
         });
@@ -156,8 +157,6 @@ class Road {
     }
 
     generateRoad(app) {
-        console.log("Inside generate road");
-        console.log(app);
         this.points = generateLineRoad(app, this.roadsNum).concat(generateCircleRoad(app));
     }
 
