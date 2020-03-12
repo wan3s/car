@@ -139,7 +139,7 @@ function draw(timestamp) {
     for (let i in cars) {
         let car = cars[i];
 
-        if (car.finished) {
+        if (car.states.finished) {
             cars.splice(i, 1);
         } else {
             car.draw(timestamp);
