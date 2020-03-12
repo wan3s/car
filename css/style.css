@@ -9,7 +9,7 @@ canvas {
     margin-left: auto;
     margin-right: auto;
     display: block;
-    border: 5px double black;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
 }
 
 .modal {
@@ -162,4 +162,30 @@ canvas {
 
 .box_for_messages:target {
     opacity: 1;
+}
+
+.buttons {
+    position: fixed;
+    width: 200px;
+    z-index: 999;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.control_button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: seagreen;
+    margin: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    font-size: 14pt;
 }

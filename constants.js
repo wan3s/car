@@ -19,6 +19,10 @@ const CANVAS_ID = 'mainField',
     SPEED_INC = 0.5,
     SPEED_DEC = 1,
     LEAVE_MODE_SWITCHER_LABEL = {
+        false: "⤵️",
+        true: "🔄"
+    },
+    LEAVE_MODE_SWITCHER_TITLES = {
         false: "уезжать с круга",
         true: "оставаться на кругу"
     };

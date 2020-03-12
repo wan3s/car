@@ -168,8 +168,8 @@ function switchLeaveMode (obj) {
     let app = document.app;
 
     app.flags.leaveCircle = !app.flags.leaveCircle;
-    console.log(LEAVE_MODE_SWITCHER_LABEL)
     obj.innerText = LEAVE_MODE_SWITCHER_LABEL[app.flags.leaveCircle];
+    obj.title = LEAVE_MODE_SWITCHER_TITLES[app.flags.leaveCircle];
     app.road.generateRoad(app);
 }
 
