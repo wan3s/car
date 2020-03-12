@@ -1,6 +1,6 @@
-function generateLineRoad(roadsNum) {
-    let width = mainField.width / 2,
-        height = mainField.height / 2,
+function generateLineRoad(app, roadsNum) {
+    let width = app.mainField.width / 2,
+        height = app.mainField.height / 2,
         maxLim =  Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2)),
         resArr = [];
 
@@ -27,7 +27,8 @@ function generateLineRoad(roadsNum) {
             
             if (Math.abs(towCenterX) <= EPS || Math.abs(mainField.width - towCenterX) <= EPS ||
                 Math.abs(towCenterY) <= EPS || Math.abs(mainField.height - towCenterY) <= EPS) { 
-                startPositions.push(point1);
+                    app.startPositions.push(point1);
+                    console.log("start position point added")
             }
 
             resArr = resArr.concat([
@@ -67,37 +68,13 @@ function randomInt(min, max) {
 }
 
 function addCar() {
-    let cars = document.cars;
+    let cars = document.app.cars;
 
     if (cars.length < MAX_CARS_NUM) {
         cars.push(new Car());
     } else {
         document.getElementById("debug").innerText = `Max num of cars reached (${MAX_CARS_NUM})!\n`;
     }
-}
-
-function draw(timestamp) {
-    let cars = document.cars,
-        road = document.road;
-
-    if (stopFlag) {
-        return;
-    }
-
-    canvasContext.clearRect(0, 0, mainField.width, mainField.height);
-    road.draw();
-
-    for (let i in cars) {
-        let car = cars[i];
-
-        if (car.finished) {
-            cars.splice(i, 1);
-        } else {
-            car.draw(timestamp);
-        }
-    }
-
-    window.requestAnimationFrame(draw);
 }
 
 function chooseRoadNumHandler(roadsNum) {
@@ -148,21 +125,34 @@ function checkDirection (currentPoint, point) {
             diffR * candDirR >= 0 && diffA * candDirA >= 0;
 }
 
-function main (roadsNum) {
-    document.cars = [];
-    document.road = new Road(roadsNum);
-    document.finishPositions = [
-        new Point(DIST_BETWEEN_LINES, 0),
-        new Point(mainField.width, DIST_BETWEEN_LINES),
-        new Point(mainField.width - DIST_BETWEEN_LINES, mainField.height),
-        new Point(0, mainField.height - DIST_BETWEEN_LINES)
-    ];
-    document.addEventListener('keypress', (event) => {
-        const keyName = event.key;
+function draw(timestamp) {
+    let app = document.app,
+        cars = app.cars,
+        road = app.road;
 
-        if (keyName === 'C') {
-            stopFlag = true;
+    if (app.flags.stop) {
+        return;
+    }
+
+    app.canvasContext.clearRect(0, 0, app.mainField.width, app.mainField.height);
+    road.draw();
+
+    for (let i in cars) {
+        let car = cars[i];
+
+        if (car.finished) {
+            cars.splice(i, 1);
+        } else {
+            car.draw(timestamp);
         }
-      });
+    }
+
+    window.requestAnimationFrame(draw);
+}
+
+function main (roadsNum) {
+    console.log("Inside main");
+    closeModalWindow();
+    document.app = new Application(roadsNum);
     window.requestAnimationFrame(draw);
 }

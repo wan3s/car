@@ -16,4 +16,4 @@ const CANVAS_ID = 'mainField',
     FINISH_BORDERS_OFFSET = 5,
     MIN_DIST = 70,
     ALPHA_DIRECTION = -1,
-    SPEED_DELTA = 0.01;
+    SPEED_DELTA = 0.0001;

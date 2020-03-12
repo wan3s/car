@@ -1,3 +1,27 @@
+class Application {
+    constructor(roadsNum) {
+        this.mainField = document.getElementById(CANVAS_ID),
+        this.canvasContext = mainField.getContext('2d'),
+        this.startPositions = [],
+        this.cars = [];
+        this.road = new Road(this, roadsNum);
+        this.flags = {
+            stop: false,
+        };
+        this.addEventListeners();
+    }
+
+    addEventListeners() {
+        document.addEventListener('keypress', (event) => {
+            const keyName = event.key;
+
+            if (keyName === 'C') {
+                this.flags.stop = true;
+            }
+        });
+    }
+}
+
 class Point {
     constructor(pos, direction, id) {
         let alpha = (2 * Math.PI) / (360 / pos.alpha);
@@ -16,6 +40,8 @@ class Point {
     }
 
     draw (color, radius = 1) {
+        let canvasContext = document.app.canvasContext;
+
         canvasContext.beginPath();
         canvasContext.arc(this.x, this.y, radius, 0, 2 * Math.PI);
         canvasContext.fillStyle = color;
@@ -33,9 +59,11 @@ class Point {
 
 class Car {
     constructor() {
-        let speed = randomInt(MIN_NEAREST_POINTS_EPS, MAX_NEAREST_POINTS_EPS);
+        let speed = randomInt(MIN_NEAREST_POINTS_EPS, MAX_NEAREST_POINTS_EPS),
+            app = document.app;
 
-        this.point = startPositions[randomInt(0, startPositions.length - 1)];
+        console.log(app);
+        this.point = app.startPositions[randomInt(0, app.startPositions.length - 1)];
         this.prevPoint = null;
         this.color = `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
         this.start = null;
@@ -62,10 +90,11 @@ class Car {
     }
 
     move() {
-        let road = document.road,
+        let app = document.app,
+            road = app.road,
+            cars = app.cars,
             nearestPoints,
             length,
-            cars = document.cars,
             nextPoint;
     
         if (this.point.x < -FINISH_BORDERS_OFFSET || this.point.x > mainField.width + FINISH_BORDERS_OFFSET ||
@@ -114,8 +143,8 @@ class Car {
 }
 
 class Road {
-    constructor(roadsNum) {
-        this.points = generateLineRoad(roadsNum).concat(generateCircleRoad());
+    constructor(app, roadsNum) {
+        this.points = generateLineRoad(app, roadsNum).concat(generateCircleRoad());
     }
 
     draw() {
@@ -153,8 +182,6 @@ class Road {
         nearestCandidates.sort((a, b) => {
             return b.dist - a.dist;
         });
-
-        console.log(nearestCandidates);
 
         for (let i in nearestCandidates) {
             let candidatePoint = nearestCandidates[i];
