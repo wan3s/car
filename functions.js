@@ -72,7 +72,7 @@ function addCar() {
     if (cars.length < MAX_CARS_NUM) {
         cars.push(new Car());
     } else {
-        document.getElementById("debug").innerText = `Max num of cars reached (${MAX_CARS_NUM})!\n`;
+        showMessage(`Достигнуто максимальное количество машин: ${MAX_CARS_NUM}`);
     }
 }
 
@@ -171,4 +171,10 @@ function switchLeaveMode (obj) {
     console.log(LEAVE_MODE_SWITCHER_LABEL)
     obj.innerText = LEAVE_MODE_SWITCHER_LABEL[app.flags.leaveCircle];
     app.road.generateRoad(app);
+}
+
+function showMessage (msg) {
+    document.getElementById("messages").innerText = msg;
+    location.href = '#messages';
+    setTimeout(() => {closeModalWindow()}, 3000);
 }
