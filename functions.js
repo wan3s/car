@@ -1,3 +1,12 @@
+
+// start application
+function start (roadsNum) {
+    closeModalWindow();
+    document.app = new Application(roadsNum);
+    window.requestAnimationFrame(document.app.draw.bind(document.app));
+}
+
+// generate roads adjacent to the intersection
 function generateLineRoad(app, roadsNum) {
     let width = app.mainField.width / 2,
         height = app.mainField.height / 2,
@@ -40,14 +49,7 @@ function generateLineRoad(app, roadsNum) {
     return resArr;
 }
 
-function highlightPoints(pointsArr) {
-    for (let i in pointsArr) {
-        let point = pointsArr[i];
-
-        point.draw('pink', 3);
-    }
-}
-
+// generates roundabout
 function generateCircleRoad(app) {
     let resArr = [];
 
@@ -62,10 +64,21 @@ function generateCircleRoad(app) {
     return resArr;
 }
 
+// debug function which highlights road described by given points
+function highlightPoints(pointsArr) {
+    for (let i in pointsArr) {
+        let point = pointsArr[i];
+
+        point.draw('pink', 3);
+    }
+}
+
+// random int between min and max
 function randomInt(min, max) {
     return Math.floor(Math.random() * (1 + max - min) + min);
 }
 
+// called when user clicks button 
 function addCar() {
     let app = document.app,
         cars = app.cars;
@@ -81,11 +94,6 @@ function addCar() {
     }
 }
 
-function chooseRoadNumHandler(roadsNum) {
-    main(roadsNum);
-    closeModalWindow();
-}
-
 function openModalWindow() {
     location.href = '#chooseRoadType';
 }
@@ -94,6 +102,7 @@ function closeModalWindow() {
     location.href = '#';
 }
 
+// changes button value when user move slider
 function changeRoadNumHandler(roadsNum, btnId) {
     let roadsWordForm = "";
 
@@ -112,6 +121,7 @@ function changeRoadNumHandler(roadsNum, btnId) {
     btnId.value = `выбрать ${roadsNum} ${roadsWordForm}`;
 }
 
+// check that point can be reached from current point according to direction
 function checkDirection (currentPoint, point) {
     let alpha = (point.alpha - currentPoint.alpha > 1.8 * Math.PI ? 
             point.alpha + ALPHA_DIRECTION * 2 * Math.PI :
@@ -129,31 +139,7 @@ function checkDirection (currentPoint, point) {
             diffR * candDirR >= 0 && diffA * candDirA >= 0;
 }
 
-function draw(timestamp) {
-    let app = document.app,
-        cars = app.cars,
-        road = app.road;
-
-    if (app.flags.stop) {
-        return;
-    }
-
-    app.canvasContext.clearRect(0, 0, app.mainField.width, app.mainField.height);
-    road.draw();
-
-    for (let i in cars) {
-        let car = cars[i];
-
-        if (car.states.finished) {
-            cars.splice(i, 1);
-        } else {
-            car.draw(timestamp);
-        }
-    }
-
-    window.requestAnimationFrame(draw);
-}
-
+// checks that given point is finish
 function isFinishPoint (point) {
     let app = document.app;
 
@@ -163,12 +149,7 @@ function isFinishPoint (point) {
             point.y > app.mainField.height + FINISH_BORDERS_OFFSET;
 }
 
-function main (roadsNum) {
-    closeModalWindow();
-    document.app = new Application(roadsNum);
-    window.requestAnimationFrame(draw);
-}
-
+// switch app state when user clicks button leave / stay on roundabout
 function switchLeaveMode (obj) {
     let app = document.app;
 
@@ -181,6 +162,7 @@ function switchLeaveMode (obj) {
     app.road.generateRoad(app);
 }
 
+// calls when user closes the application
 function closeApp () {
     let app = document.app;
 
@@ -188,6 +170,7 @@ function closeApp () {
     location.href = `#${CLOSE_WINDOW_ID}`;
 }
 
+// displays banner with given message
 function showMessage (msg) {
     document.getElementById(MESSAGE_BANNER_ID).innerText = msg;
     location.href = `#${MESSAGE_BANNER_ID}`;

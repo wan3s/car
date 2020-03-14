@@ -1,3 +1,9 @@
+/*
+ *  class Aplication
+ *      creates road, stores application flags, 
+ *      redraws frames
+ */
+
 class Application {
     constructor(roadsNum) {
         this.mainField = document.getElementById(CANVAS_ID);
@@ -24,7 +30,38 @@ class Application {
             }
         });
     }
+
+    draw(timestamp) {
+        let cars = this.cars,
+            road = this.road;
+    
+        if (this.flags.stop) {
+            return;
+        }
+    
+        this.canvasContext.clearRect(0, 0, this.mainField.width, this.mainField.height);
+        road.draw();
+    
+        for (let i in cars) {
+            let car = cars[i];
+    
+            if (car.states.finished) {
+                cars.splice(i, 1);
+            } else {
+                car.draw(timestamp);
+            }
+        }
+    
+        window.requestAnimationFrame(this.draw.bind(this));
+    }
 }
+
+/*
+ *  class Point
+ *      stores info about points,
+ *      compares points, calculates distances between points,
+ *      draws point
+ */
 
 class Point {
     constructor(pos, direction, id) {
@@ -61,6 +98,12 @@ class Point {
     }
 }
 
+/* 
+ *  class Car
+ *      stores info about car, moves car,
+ *      recalculates car's speed
+ */
+
 class Car {
     constructor() {
         let speed = randomInt(MIN_NEAREST_POINTS_EPS, MAX_NEAREST_POINTS_EPS),
@@ -88,7 +131,6 @@ class Car {
             this.start = timestamp;
         }
     
-        //this.point.draw(this.color, this.states.slowDown ? 10 : 5);
         this.point.draw(this.color, this.states.slowDown ? 7 : 5);
     }
 
@@ -140,6 +182,11 @@ class Car {
     }
 }
 
+/* class Road
+ *      stores info about road, generate road's points,
+ *      calculates points, which can be reaches from given point
+ */
+
 class Road {
     constructor(app, roadsNum) {
         this.roadsNum = roadsNum;
@@ -167,8 +214,6 @@ class Road {
             nearestCandidates = [],
             uniqueCandidates = [], 
             idsArr = [];
-
-        // highlightPoints(filteredCandidates);
 
         for (let i in filteredCandidates) {
             let roadPoint = filteredCandidates[i],
