@@ -45,10 +45,10 @@ class Application {
         for (let i in cars) {
             let car = cars[i];
     
-            if (car.states.finished) {
+            if (car.state.finished) {
                 cars.splice(i, 1);
             } else {
-                car.draw(timestamp);
+                car.draw(timestamp, this);
             }
         }
     
@@ -115,40 +115,39 @@ class Car {
         this.start = null;
         this.speed = speed;
         this.maxSpeed = speed;
-        this.states = {
+        this.state = {
             slowDown: false,
             finished: false,
         };
     }
 
-    draw(timestamp) {
+    draw(timestamp, app) {
         if (!this.start) {
             this.start = timestamp;
         }
     
         if (timestamp - this.start >= FRAMES_DELAY) {
-            this.move();
+            this.move(app);
             this.start = timestamp;
         }
     
-        this.point.draw(this.color, this.states.slowDown ? 7 : 5);
+        this.point.draw(this.color, this.state.slowDown ? 7 : 5);
     }
 
-    move() {
-        let app = document.app,
-            road = app.road,
+    move(app) {
+        let road = app.road,
             nearestPoints,
             length,
             nextPoint;
     
         if (isFinishPoint(this.point)) {
-            this.states.finished = true;
+            this.state.finished = true;
             return;
         }
 
-        this.states.slowDown = false;
+        this.state.slowDown = false;
 
-        this.recalculateSpeed();
+        this.recalculateSpeed(app.cars);
 
         nearestPoints = road.getNearestPoints(this.point, this.speed);
         length = nearestPoints.length;
@@ -162,9 +161,7 @@ class Car {
         this.point = nextPoint;
     }
 
-    recalculateSpeed() {
-        let cars = document.app.cars;
-
+    recalculateSpeed(cars) {
         cars = cars.filter((other) => {
             let dist = this.point.distanceToPoint(other.point);
 
@@ -174,7 +171,7 @@ class Car {
         });
 
         if (cars.length > 1) {
-            this.states.slowDown = true;
+            this.state.slowDown = true;
             this.speed = Math.max(0, this.speed - SPEED_DEC);
             return;
         }
